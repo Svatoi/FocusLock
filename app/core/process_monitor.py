@@ -1,23 +1,20 @@
 import psutil
-
-## Доделать выведение всех заблоченных процессов
+import logging
 
 def get_processes(block_list=[]):
+    logger = logging.getLogger(__name__)
 
     processes = []
-    for proc in sorted(psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']), 
-                       key=lambda x: x.info['cpu_percent'], 
-                       reverse=True):
+    logger.info("Collecting information of all running processes, start")
+    for proc in psutil.process_iter(['pid', 'name']):
         try:
-            if proc.info['name'] in block_list:
+            if proc.info['name'].lower() in block_list:
+                logger.info(f"It was found: {proc.info['name']} which is a prohibited")
                 processes.append([
                     proc.info['pid'], 
-                    proc.info['name'], 
-                    f"{proc.info['cpu_percent']:.2f}%", 
-                    f"{proc.info['memory_percent']:.2f}%"
+                    proc.info['name']
                 ])
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-    
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as error:
+            logger.error(f"Error when try to get processes: {error}")
     return processes
 
