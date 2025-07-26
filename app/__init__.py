@@ -1,10 +1,21 @@
 import time
 
+from sqlalchemy import create_engine
+
+from .models import Base, Market, Task, User
+from .utils import get_db_path, is_create_db, logger
+
+engine = create_engine(get_db_path(), echo=True)
+
+def setup_database() -> None:
+    if not is_create_db():
+        Base.metadata.create_all(engine)
+        logger.info(f"Tables have been created: [{Base.metadata.tables.keys()}]") 
 
 def create_app():
-    from .core import get_processes, create_DB
+    from .core import get_processes
     
-    db = create_DB()
+    setup_database()
     
     process=input('Enter a list of process wich you like to ban, separated by commas: ')
     list_of_block_process = [x.strip().lower() + '.exe' for x in process.split(',')]
@@ -19,7 +30,7 @@ def create_app():
         
         processes = get_processes(block_list=list_of_block_process)
         
-        if not check_tasks_completed:
+        if check_tasks_completed:
             break
         
         time.sleep(1)
