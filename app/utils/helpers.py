@@ -14,9 +14,6 @@ def get_db_path() -> str:
     if not db_path:
         logger.error("ValueError: DB_PATH не вказаний в .env файл")
     
-    # db_path = os.path.normpath(db_path)
-    # logger.info(f"Convert path to normpath: ({db_path}) ")
-    
     return db_path
 
 def is_create_db() -> bool:
