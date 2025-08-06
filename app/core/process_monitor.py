@@ -1,8 +1,6 @@
 import psutil
 from app.utils import logger
 
-## Добавить отслеживания захода на сайты
-
 def get_processes(block_list=[]):
 
     processes = []

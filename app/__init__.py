@@ -16,21 +16,29 @@ def setup_database() -> None:
         logger.debug("Tables already exist")
 
 def create_app():
-    from .core import Blocker, get_processes
+    from .core import Blocker, get_processes, get_active_website
     
     setup_database()
     
     bl = Blocker()
     
-    process=input('Enter a list of process wich you like to ban, separated by commas: ')
-    list_of_block_processes = [x.strip().lower() + '.exe' for x in process.split(',')]
-    bl.add_processes(list_of_block_processes)
+    ## Temporary option
+    ## ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    
+    process=input('\n\nEnter a list of process wich you like to ban, separated by commas: ')
+    sites=input('\nEnter a list of sites wich you like to ban, separated by commas: ') # This will work when I make own browser extensions
+    
+    list_of_blocked_websites = ['https://' + x.strip().lower() for x in sites.split(',')]
+    list_of_blocked_processes = [x.strip().lower() + '.exe' for x in process.split(',')]
+    
+    bl.add_processes(list_of_blocked_websites)
+    bl.add_processes(list_of_blocked_processes)
     
     remove_process=input('Do you want to remove one of your blocked processes?(Yes/No): ')
     if remove_process == 'No':
         pass
     if remove_process == 'Yes':
-        list_process=input(f"What process do you want to remove?({list_of_block_processes}):")
+        list_process=input(f"What process do you want to remove?({list_of_blocked_processes}):")
         process = [x.strip().lower() + '.exe' for x in list_process.split(',')]
         bl.remove_processes(process)
         
@@ -38,7 +46,7 @@ def create_app():
     if add_process == 'No':
         pass
     if add_process == 'Yes':
-        process=input(f"What process do you want to add?({list_of_block_processes}):")
+        process=input(f"What process do you want to add?({list_of_blocked_processes}):")
         bl.add_processes(process)
     
     tasks = input('Enter some task what you want to complete: ')
@@ -46,6 +54,7 @@ def create_app():
     
     check_tasks_completed = False
     logger.info(f"Task is completed?: {check_tasks_completed}")
+    
     
     has_active_tasks = bool(list_of_tasks)
     logger.info("Lockdown mode starting, some tasks is active")
@@ -61,3 +70,5 @@ def create_app():
             break
         
         time.sleep(1)
+        
+    ## Everything above is a temporary option

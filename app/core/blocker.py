@@ -3,8 +3,6 @@ import time
 
 from app.utils import logger
 
-## Сделать так что бы ещё и блокало сайты
-
 class Blocker():
     def __init__(self):
         self.blocked_processes = set()
@@ -13,7 +11,7 @@ class Blocker():
         logger.info(f"The processes: {list_of_processes} will be add to blocked processes")
         for proc in list_of_processes:
             self.blocked_processes.add(proc)
-        logger.info(f"All submitted processes have been added to the blocked list")
+        logger.info(f"All submitted processes ({list_of_processes}) have been added to the blocked list")
         
     def remove_processes(self, list_of_processes: str) -> None:
         logger.info(f"The processes: {list_of_processes} will be remove from blocked processes")
