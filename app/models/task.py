@@ -1,12 +1,13 @@
+from datetime import datetime
 from typing import Optional
 from datetime import datetime
 from sqlalchemy import Text, TIMESTAMP, String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.sql.functions import current_timestamp
+from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
 
 from .base import Base
+from .utils import ModelMixin
 
-class Task(Base):
+class Task(Base, ModelMixin):
     __tablename__ = "tasks"
     
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -14,6 +15,7 @@ class Task(Base):
     score: Mapped[int] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(Text)
-    is_done: Mapped[bool] = mapped_column(default=False)
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=current_timestamp)
+    is_done: Mapped[Optional[bool]] = mapped_column(default=False)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, default=datetime.now)
     
+    user: Mapped["User"] = relationship("User", back_populates="tasks")

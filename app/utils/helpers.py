@@ -18,8 +18,8 @@ def get_db_path() -> str:
 
 def is_create_db() -> bool:
     db_path = get_db_path().replace("sqlite:///", "")
-    return (
-        not os.path.exists(db_path)
-        and os.access(os.path.dirname(db_path), os.W_OK)
-    )
+    if not os.path.exists(db_path):
+        return False
+    else:
+        return True
 

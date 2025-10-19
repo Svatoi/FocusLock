@@ -2,3 +2,4 @@ from .base import Base
 from .user import User
 from .task import Task
 from .market import Market
+from .utils import ModelMixin
